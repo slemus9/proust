@@ -45,8 +45,7 @@ lambda = do
   reservedOp "\\"
   x <- lit
   reservedOp "=>"
-  e <- expr
-  return $ Lam x e
+  Lam x <$> expr
 
 aExpr :: Parsec String st Expr
 aExpr = var <|> parens expr
