@@ -28,6 +28,7 @@ library
       Language
       Lib
       Parser
+      PrettyPrinter
   other-modules:
       Paths_proust
   hs-source-dirs:
