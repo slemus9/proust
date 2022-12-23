@@ -41,13 +41,12 @@ var :: Parsec String st Expr
 var = Var <$> lit
 
 lambda :: Parsec String st Expr
-lambda = Lam <$> arg <*> expr
-  where
-    arg = do
-      reservedOp "\\"
-      s <- lit
-      reservedOp "=>"
-      return s
+lambda = do
+  reservedOp "\\"
+  x <- lit
+  reservedOp "=>"
+  e <- expr
+  return $ Lam x e
 
 aExpr :: Parsec String st Expr
 aExpr = var <|> parens expr
@@ -59,7 +58,7 @@ expr :: Parsec String st Expr
 expr = joinExpr <$> choice [lambda, apply] <*> optionalType
   where
     optionalType = optionMaybe (reservedOp ":" *> typeAnn)
-    joinExpr e Nothing = e
+    joinExpr e Nothing  = e
     joinExpr e (Just t) = Ann e t
 
 -- Type

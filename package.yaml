@@ -25,6 +25,7 @@ dependencies:
 - parsec
 - recursion-schemes
 - data-fix
+- containers
 
 ghc-options:
 - -Wall
