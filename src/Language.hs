@@ -1,14 +1,20 @@
-module Language () where
-
-import qualified Data.Text as T
+module Language where
 
 data Expr =
-    Lam Symbol Expr -- Lambda expression, \a => b
-  | App Expr Expr   -- Function application, f a 
-  | Ann Expr Type   -- Type annotation, t : T
+    Var Literal
+  | Lam Literal Expr -- Lambda expression, \a => b
+  | App Expr Expr    -- Function application, f a 
+  | Ann Expr TypeAnn -- Type annotation, t : T
+  deriving (Show, Eq)
 
-data Type =
-    Arrow Type Type -- Function type, A -> B
-  | Type Symbol     -- A type, T
+data TypeAnn =
+    Arrow TypeAnn TypeAnn -- Function type, A -> B
+  | TypeVar Literal       -- A type, T
+  deriving (Show, Eq)
 
-newtype Symbol = Symbol T.Text
+newtype Literal = Literal String
+  deriving (Show, Eq)
+
+-- Reserved symbols
+reservedOperations :: [String]
+reservedOperations = ["\\", "=>", "->", ":"]
