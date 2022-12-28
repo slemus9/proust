@@ -25,12 +25,13 @@ source-repository head
 
 library
   exposed-modules:
-      Language
-      Lib
-      Parser
-      PrettyPrinter
-      REPL
-      TypeCheck
+      Proust.Language
+      Proust.Parser
+      Proust.PrettyPrinter
+      Proust.TypeChecker
+      REPL.Command
+      REPL.Main
+      REPL.Parser
   other-modules:
       Paths_proust
   hs-source-dirs:

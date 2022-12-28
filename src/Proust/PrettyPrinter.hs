@@ -1,6 +1,6 @@
-module PrettyPrinter where
+module Proust.PrettyPrinter where
 
-import Language
+import Proust.Language
 
 pprintExpr :: Expr -> String
 pprintExpr (Var x)     = pprintLit x

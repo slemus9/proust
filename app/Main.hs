@@ -1,7 +1,6 @@
 module Main (main) where
 
-import Lib
-import REPL (repl)
+import REPL.Main (repl)
 
 main :: IO ()
 main = repl

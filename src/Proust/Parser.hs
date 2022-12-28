@@ -1,12 +1,10 @@
-{-# OPTIONS_GHC -Wno-unused-do-bind #-}
-
-module Parser where
+module Proust.Parser where
 
 import Text.Parsec
 import qualified Text.Parsec.Language as P
 import qualified Text.Parsec.Token as P
 import Data.Functor.Identity
-import Language
+import Proust.Language
 
 -- Parser definition
 langDef :: P.LanguageDef st

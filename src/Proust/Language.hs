@@ -1,4 +1,4 @@
-module Language where
+module Proust.Language where
 
 data Expr =
     Var Literal

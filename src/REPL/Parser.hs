@@ -1,41 +1,12 @@
-module REPL (repl) where
+module REPL.Parser where
 
-import System.IO ( stdout, hFlush )
+import REPL.Command
 import Text.Parsec
-import Language
-import PrettyPrinter
 import Data.Functor ( ($>) )
 import Data.Functor.Identity ( Identity )
 import qualified Text.Parsec.Language as P
 import qualified Text.Parsec.Token as P
-import qualified Parser as ExprParser
-
-repl :: IO ()
-repl = putStrLn "Proust REPL:" >> loop
-
-loop :: IO ()
-loop = do
-  putStr "> "
-  hFlush stdout
-  getLine >>= processLine
-
-processLine :: String -> IO ()
-processLine s = case parseCommand s of
-  Right cmd -> processCommand cmd
-  Left e    -> print e >> loop
-
-processCommand :: Command -> IO ()
-processCommand (SetTask t)  = putStrLn "Setting task:" >> putStrLn (pprintType t) >> loop
-processCommand (Refine n e) = putStrLn ("Refining hole #" ++ show n) >> putStrLn (pprintExpr e) >> loop
-processCommand EmptyLn      = loop
-processCommand Quit         = putStrLn "Exiting ..."
-
-data Command =
-    SetTask TypeAnn
-  | Refine Int Expr
-  | EmptyLn
-  | Quit
-  deriving Show
+import qualified Proust.Parser as ExprParser
 
 -- Parser definition
 langDef :: P.LanguageDef st

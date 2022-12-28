@@ -1,7 +1,7 @@
-module TypeCheck where
+module Proust.TypeChecker where
 
 import qualified Data.Map.Strict as M
-import Language
+import Proust.Language
 import Data.Functor ( ($>) )
 
 type Context = M.Map Literal TypeAnn
