@@ -29,6 +29,7 @@ library
       Lib
       Parser
       PrettyPrinter
+      TypeCheck
   other-modules:
       Paths_proust
   hs-source-dirs:

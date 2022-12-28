@@ -13,7 +13,7 @@ data TypeAnn =
   deriving (Show, Eq)
 
 newtype Literal = Literal String
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 -- Reserved symbols
 reservedOperations :: [String]
