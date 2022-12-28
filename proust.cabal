@@ -29,6 +29,7 @@ library
       Lib
       Parser
       PrettyPrinter
+      REPL
       TypeCheck
   other-modules:
       Paths_proust
