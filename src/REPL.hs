@@ -3,6 +3,7 @@ module REPL (repl) where
 import System.IO ( stdout, hFlush )
 import Text.Parsec
 import Language
+import PrettyPrinter
 import Data.Functor ( ($>) )
 import Data.Functor.Identity ( Identity )
 import qualified Text.Parsec.Language as P
@@ -10,7 +11,7 @@ import qualified Text.Parsec.Token as P
 import qualified Parser as ExprParser
 
 repl :: IO ()
-repl = print "Proust REPL:" >> loop
+repl = putStrLn "Proust REPL:" >> loop
 
 loop :: IO ()
 loop = do
@@ -24,12 +25,14 @@ processLine s = case parseCommand s of
   Left e    -> print e >> loop
 
 processCommand :: Command -> IO ()
-processCommand (SetTask t) = print "Setting task:" >> print t >> loop
-processCommand EmptyLn     = loop
-processCommand Quit        = print "Exiting ..."
+processCommand (SetTask t)  = putStrLn "Setting task:" >> putStrLn (pprintType t) >> loop
+processCommand (Refine n e) = putStrLn ("Refining hole #" ++ show n) >> putStrLn (pprintExpr e) >> loop
+processCommand EmptyLn      = loop
+processCommand Quit         = putStrLn "Exiting ..."
 
-data Command = 
+data Command =
     SetTask TypeAnn
+  | Refine Int Expr
   | EmptyLn
   | Quit
   deriving Show
@@ -37,7 +40,7 @@ data Command =
 -- Parser definition
 langDef :: P.LanguageDef st
 langDef = P.emptyDef
-  { P.reservedOpNames = ["set-task!", "quit!"] }
+  { P.reservedOpNames = ["!set-task", "!quit", "!refine"] }
 
 -- Parse function
 parseCommand :: String -> Either ParseError Command
@@ -54,15 +57,25 @@ whiteSpace :: Parsec String st ()
 whiteSpace = P.whiteSpace lexer
 
 command :: Parsec String st Command
-command = choice [quit, setTask, emptyLn]
+command = choice [quit, setTask, refine, emptyLn]
 
 setTask :: Parsec String st Command
-setTask = SetTask <$> (reservedOp "set-task!" *> parseType)
-  where 
+setTask = SetTask <$> (reservedOp "!set-task" *> parseType)
+  where
     parseType = label ExprParser.typeAnn "expecting a type annotation"
 
+int :: Parsec String st Int
+int = read <$> many1 digit
+
+refine :: Parsec String st Command
+refine = do
+  reservedOp "!refine"
+  n <- int
+  whiteSpace
+  Refine n <$> ExprParser.expr
+
 quit :: Parsec String st Command
-quit = reservedOp "quit!" $> Quit
+quit = reservedOp "!quit" $> Quit
 
 emptyLn :: Parsec String st Command
 emptyLn = (whiteSpace >> notFollowedBy anyToken) $> EmptyLn
